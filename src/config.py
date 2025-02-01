@@ -14,5 +14,4 @@ DAMAGE_COSTS = {
     "high": 200000,
 }
 
-DATA_FILE = "csv_files/current_wildfiredata.csv"
 REPORT_FILE = "report/current_report.txt"

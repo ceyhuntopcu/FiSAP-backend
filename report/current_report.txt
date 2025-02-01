@@ -1,5 +1,0 @@
-Number of fires addressed: 28
-    Number of fires delayed: 4
-    Total operational costs: $123000
-    Estimated damage costs from delayed responses: $550000
-    Fire severity report: {'low': 1, 'medium': 1, 'high': 2}
