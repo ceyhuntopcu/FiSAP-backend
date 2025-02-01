@@ -1,0 +1,40 @@
+name: Deploy Flask App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ghcr.io/${{ github.actor }}/flask-app:latest .
+          docker push ghcr.io/${{ github.actor }}/flask-app:latest
+
+      - name: Deploy on Portainer
+        run: |
+          curl -X POST http://your-portainer-api-url/api/endpoints/1/docker/containers/create?name=flask-app \
+            -H "Authorization: Bearer ${{ secrets.PORTAINER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            --data '{
+              "Image": "ghcr.io/${{ github.actor }}/flask-app:latest",
+              "HostConfig": {
+                "PortBindings": {
+                  "5000/tcp": [{"HostPort": "5000"}]
+                },
+                "RestartPolicy": { "Name": "always" }
+              }
+            }'
+
+          curl -X POST http://your-portainer-api-url/api/endpoints/1/docker/containers/flask-app/start \
+            -H "Authorization: Bearer ${{ secrets.PORTAINER_API_KEY }}"
