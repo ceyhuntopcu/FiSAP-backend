@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  flask-app:
+    image: ghcr.io/horisofine/fisap-backend:latest  # Replace with your GitHub Container Registry
+    ports:
+      - "5000:5000"
+    restart: always
