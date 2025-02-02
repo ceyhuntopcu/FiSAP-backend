@@ -15,3 +15,5 @@ DAMAGE_COSTS = {
 }
 
 REPORT_FILE = "report/current_report.txt"
+
+MODEL_PATH = "models/wildfire_occurrence_lstm.pth"

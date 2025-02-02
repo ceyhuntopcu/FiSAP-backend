@@ -5,6 +5,7 @@ import os
 from resource_allocation import deploy_resources
 from report_generation import generate_report
 from datetime import timedelta
+from model import predict
 
 app = Flask(__name__)
 CORS(app)
@@ -59,6 +60,32 @@ def get_deployments():
 # def get_resources():
 #     resources = get_current_resources()
 #     return jsonify({"resources": resources})
+
+@app.route('/predictions', methods=['POST'])
+def get_predictions():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(file_path)
+
+    df = pd.read_csv(file_path)
+    result_df = predict(df.copy())
+
+    # Convert timestamp to datetime and extract date
+    df["date"] = pd.to_datetime(df["timestamp"]).dt.date
+
+    # Group by date and aggregate locations (joining multiple locations into a list)
+    df["location"] = df["latitude"].astype(str) + ", " + df["longitude"].astype(str)
+    grouped_df = df.groupby("date")["location"].first().reset_index()
+    result_df["location"] = grouped_df["location"]
+
+    return jsonify({"result": result_df.to_dict('records')})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
