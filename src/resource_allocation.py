@@ -1,13 +1,13 @@
 from config import RESOURCES, DAMAGE_COSTS
 from collections import defaultdict
 
+available_resources = {key: val["availability"] for key, val in RESOURCES.items()}
+
 def deploy_resources(wildfire_data):
     global deployment_records
     deployment_records = []
 
     ongoing_deployments = []
-    available_resources = {key: val["availability"] for key, val in RESOURCES.items()}
-
     missed_responses = {"low": 0, "medium": 0, "high": 0}
     severity_count = defaultdict(int)
 
@@ -23,7 +23,6 @@ def deploy_resources(wildfire_data):
         severity_count[fire_severity] += 1
 
         ongoing_deployments = [d for d in ongoing_deployments if d["end_time"] > fire_start]
-
         for deployment in ongoing_deployments:
             available_resources[deployment["resource"]] += 1
 
@@ -52,7 +51,6 @@ def deploy_resources(wildfire_data):
                 break
 
         deployment_records.append(curr_fire)
-        print(f"✅ Deployment added: {deployment_records[-1]}")
 
         if not resources_used:
             missed_responses[fire_severity] += 1
@@ -60,3 +58,6 @@ def deploy_resources(wildfire_data):
 
     return fires_addressed, missed_responses, operational_cost, total_damage_cost, deployment_records, severity_count
 
+def get_current_resources():
+    return {resource: f"{available_resources[resource]}/{RESOURCES[resource]['availability']}"
+            for resource in RESOURCES}

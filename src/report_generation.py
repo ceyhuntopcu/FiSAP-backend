@@ -11,9 +11,6 @@ def generate_report(fires_addressed, missed_responses, operational_cost, total_d
     Fire severity report: {severity_count}
     """
 
-    with open(REPORT_FILE, "w", newline='') as f:
-        f.write(report_text.strip())
-
     return {
         "Number of fires addressed": fires_addressed,
         "Number of fires delayed": total_missed,

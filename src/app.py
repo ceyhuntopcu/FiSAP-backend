@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
 import os
-from resource_allocation import deploy_resources
+from resource_allocation import deploy_resources, get_current_resources
 from report_generation import generate_report
 
 app = Flask(__name__)
@@ -19,7 +19,7 @@ def upload_csv():
     global global_deployment_records
 
     if 'file' not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400  # Ensure file is uploaded
+        return jsonify({"error": "No file uploaded"}), 400
 
     file = request.files['file']
     if file.filename == '':
@@ -74,6 +74,11 @@ def update_severity():
         "message": "Severity updated successfully!",
         "updated_fire": updated_fire
     })
+
+@app.route('/get_resources', methods=['GET'])
+def get_resources():
+    resources = get_current_resources()
+    return jsonify({"resources": resources})
 
 if __name__ == '__main__':
     app.run(debug=True)
