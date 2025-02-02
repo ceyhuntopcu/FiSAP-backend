@@ -19,7 +19,7 @@ def upload_csv():
     global global_deployment_records
 
     if 'file' not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
+        return jsonify({"error": "No file uploaded"}), 400  # Ensure file is uploaded
 
     file = request.files['file']
     if file.filename == '':
