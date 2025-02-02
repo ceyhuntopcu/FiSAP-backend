@@ -1,10 +1,9 @@
 from config import RESOURCES, DAMAGE_COSTS
 from collections import defaultdict
 
-available_resources = {key: val["availability"] for key, val in RESOURCES.items()}
-
-def deploy_resources(wildfire_data):
-    global deployment_records, available_resources
+def deploy_resources(wildfire_data, resources):
+    global deployment_records
+    available_resources = {key: val["availability"] for key, val in resources.items()}
 
     deployment_records = []
     ongoing_deployments = []

@@ -4,6 +4,7 @@ import pandas as pd
 import os
 from resource_allocation import deploy_resources, get_current_resources
 from report_generation import generate_report
+from datetime import timedelta
 
 app = Flask(__name__)
 CORS(app)
@@ -33,8 +34,16 @@ def upload_csv():
     wildfire_data["fire_start_time"] = pd.to_datetime(wildfire_data["fire_start_time"])
     wildfire_data = wildfire_data.sort_values(by=["fire_start_time", "severity"], ascending=[True, False])
 
+    resources = {
+        "Smoke Jumpers": {"deployment_time": timedelta(minutes=30), "cost": 5000, "availability": 5},
+        "Fire Engines": {"deployment_time": timedelta(hours=1), "cost": 2000, "availability": 10},
+        "Helicopters": {"deployment_time": timedelta(minutes=45), "cost": 8000, "availability": 3},
+        "Tanker Planes": {"deployment_time": timedelta(hours=2), "cost": 15000, "availability": 2},
+        "Ground Crews": {"deployment_time": timedelta(hours=1.5), "cost": 3000, "availability": 8},
+    }
+
     fires_addressed, missed_responses, operational_cost, total_damage_cost, deployment_records, severity_count = deploy_resources(
-        wildfire_data)
+        wildfire_data, resources)
 
     global_deployment_records = deployment_records.copy()
     print(f"🔥 Successfully saved {len(global_deployment_records)} deployments to global variable.")
