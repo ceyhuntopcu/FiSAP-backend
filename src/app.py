@@ -33,12 +33,13 @@ def upload_csv():
     wildfire_data["fire_start_time"] = pd.to_datetime(wildfire_data["fire_start_time"])
     wildfire_data = wildfire_data.sort_values(by=["fire_start_time", "severity"], ascending=[True, False])
 
-    fires_addressed, missed_responses, operational_cost, total_damage_cost, deployment_records = deploy_resources(wildfire_data)
+    fires_addressed, missed_responses, operational_cost, total_damage_cost, deployment_records, severity_count = deploy_resources(
+        wildfire_data)
 
     global_deployment_records = deployment_records.copy()
     print(f"🔥 Successfully saved {len(global_deployment_records)} deployments to global variable.")
 
-    report = generate_report(fires_addressed, missed_responses, operational_cost, total_damage_cost)
+    report = generate_report(fires_addressed, missed_responses, operational_cost, total_damage_cost, severity_count)
     return jsonify({"message": "File processed successfully!", "report": report})
 
 @app.route('/deployments', methods=['GET'])
