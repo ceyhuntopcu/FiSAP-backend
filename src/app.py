@@ -83,6 +83,7 @@ def get_predictions():
     df["location"] = df["latitude"].astype(str) + ", " + df["longitude"].astype(str)
     grouped_df = df.groupby("date")["location"].first().reset_index()
     result_df["location"] = grouped_df["location"]
+    result_df = result_df[result_df["Fire_Predicted"] != 0].copy()
 
     return jsonify({"data": result_df.to_dict('records')})
 
