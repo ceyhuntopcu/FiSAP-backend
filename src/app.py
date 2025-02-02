@@ -10,6 +10,7 @@ CORS(app)
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+CSV_FILE_PATH = os.path.join(UPLOAD_FOLDER, "current_wildfiredata.csv")
 
 global_deployment_records = []
 
@@ -43,6 +44,35 @@ def upload_csv():
 @app.route('/deployments', methods=['GET'])
 def get_deployments():
     return jsonify({"deployments": global_deployment_records})
+
+@app.route('/update_severity', methods=['PUT'])
+def update_severity():
+    data = request.get_json()
+
+    location = data.get('location')
+    new_severity = data.get('severity')
+
+    if not location or not new_severity:
+        return jsonify({"error": "Missing location or severity"}), 400
+
+    if not os.path.exists(CSV_FILE_PATH):
+        return jsonify({"error": "CSV file not found"}), 500
+
+    df = pd.read_csv(CSV_FILE_PATH)
+
+    mask = df["location"] == location
+    if mask.sum() == 0:
+        return jsonify({"error": "No wildfire found at the given location"}), 404
+
+    df.loc[mask, "severity"] = new_severity
+    df.to_csv(CSV_FILE_PATH, index=False)
+
+    updated_fire = df.loc[mask].to_dict(orient="records")[0]
+
+    return jsonify({
+        "message": "Severity updated successfully!",
+        "updated_fire": updated_fire
+    })
 
 if __name__ == '__main__':
     app.run(debug=True)
