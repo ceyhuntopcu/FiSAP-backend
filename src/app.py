@@ -50,11 +50,11 @@ def upload_csv():
     print(f"🔥 Successfully saved {len(global_deployment_records)} deployments to global variable.")
 
     report = generate_report(fires_addressed, missed_responses, operational_cost, total_damage_cost, severity_count)
-    return jsonify({"message": "File processed successfully!", "report": report})
+    return jsonify({"message": "File processed successfully!", "data": report})
 
 @app.route('/deployments', methods=['GET'])
 def get_deployments():
-    return jsonify({"deployments": global_deployment_records})
+    return jsonify({"data": global_deployment_records})
 
 # @app.route('/get_resources', methods=['GET'])
 # def get_resources():
@@ -84,7 +84,7 @@ def get_predictions():
     grouped_df = df.groupby("date")["location"].first().reset_index()
     result_df["location"] = grouped_df["location"]
 
-    return jsonify({"result": result_df.to_dict('records')})
+    return jsonify({"data": result_df.to_dict('records')})
 
 
 if __name__ == '__main__':
