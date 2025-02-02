@@ -8,7 +8,7 @@ def generate_report(fires_addressed, missed_responses, operational_cost, total_d
     Number of fires delayed: {total_missed}
     Total operational costs: ${operational_cost}
     Estimated damage costs from delayed responses: ${total_damage_cost}
-    Fire severity report: {severity_count}  # ✅ Now uses actual fire counts
+    Fire severity report: {severity_count}
     """
 
     with open(REPORT_FILE, "w", newline='') as f:
@@ -19,5 +19,5 @@ def generate_report(fires_addressed, missed_responses, operational_cost, total_d
         "Number of fires delayed": total_missed,
         "Total operational costs": f"${operational_cost}",
         "Estimated damage costs from delayed responses": f"${total_damage_cost}",
-        "Fire severity report": severity_count  # ✅ Updated count
+        "Fire severity report": severity_count
     }
