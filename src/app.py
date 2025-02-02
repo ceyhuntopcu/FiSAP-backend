@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
 import os
-from resource_allocation import deploy_resources, get_current_resources
+from resource_allocation import deploy_resources
 from report_generation import generate_report
 from datetime import timedelta
 
@@ -55,10 +55,10 @@ def upload_csv():
 def get_deployments():
     return jsonify({"deployments": global_deployment_records})
 
-@app.route('/get_resources', methods=['GET'])
-def get_resources():
-    resources = get_current_resources()
-    return jsonify({"resources": resources})
+# @app.route('/get_resources', methods=['GET'])
+# def get_resources():
+#     resources = get_current_resources()
+#     return jsonify({"resources": resources})
 
 if __name__ == '__main__':
     app.run(debug=True)

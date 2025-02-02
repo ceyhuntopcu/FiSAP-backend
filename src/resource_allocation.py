@@ -65,14 +65,14 @@ def deploy_resources(wildfire_data, resources):
 
     return fires_addressed, missed_responses, operational_cost, total_damage_cost, deployment_records, severity_count
 
-def get_current_resources():
-    print("\n📡 Fetching Current Resource Availability...")
-    print(f"🔍 Current State: {available_resources}")
-
-    resource_status = {
-        resource: f"{available_resources[resource]}/{RESOURCES[resource]['availability']}"
-        for resource in RESOURCES
-    }
-
-    print(f"✅ Response Data: {resource_status}\n")
-    return resource_status
+# def get_current_resources():
+#     print("\n📡 Fetching Current Resource Availability...")
+#     print(f"🔍 Current State: {available_resources}")
+#
+#     resource_status = {
+#         resource: f"{available_resources[resource]}/{RESOURCES[resource]['availability']}"
+#         for resource in RESOURCES
+#     }
+#
+#     print(f"✅ Response Data: {resource_status}\n")
+#     return resource_status
